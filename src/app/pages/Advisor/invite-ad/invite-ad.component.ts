@@ -11,10 +11,10 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./invite-ad.component.css']
 })
 export class InviteAdComponent implements OnInit {
-  constructor(private router: Router, private http: HttpClient, private el: ElementRef, private route: ActivatedRoute,private toastr: ToastrService) {
-  
+  constructor(private router: Router, private http: HttpClient, private el: ElementRef, private route: ActivatedRoute, private toastr: ToastrService) {
+
   }
-  api = "https://serverbackend.cyclic.app"
+  api = "https://real-sweatsuit-toad.cyclic.app"
   showForm1: boolean = true;
   showForm2: boolean = false;
   isResultLoaded = false;
@@ -112,25 +112,30 @@ export class InviteAdComponent implements OnInit {
   projectIdreturn: any;
 
   async register() {
-   
-      let project_advisor = {
-        "Project_idProject": this.projectId,
-        "Advisor_idAdvisor": this.advisorId,
-        "advisor_role_idadvisor_role": this.iddescript_role,
-      };
-      console.log(project_advisor)
-      this.http.post(this.api + "/inviteAdv/project_advisor/add", project_advisor).subscribe((Data: any) => {
-console.log(Data)
-      });
 
-      this.http.delete(this.api + "/inviteAdv/inviteadvisor/delete/:" + this.inviteadvisorid + '/:' + this.projectId).subscribe((Data: any) => {
+    let project_advisor = {
+      "Project_idProject": this.projectId,
+      "Advisor_idAdvisor": this.advisorId,
+      "advisor_role_idadvisor_role": this.iddescript_role,
+    };
+    console.log(project_advisor)
+    this.http.post(this.api + "/inviteAdv/project_advisor/add", project_advisor).subscribe(async (Data: any) => {
+      if (await Data.status) {
+        this.http.delete(this.api + "/inviteAdv/inviteadvisor/delete/:" + this.inviteadvisorid + '/:' + this.projectId).subscribe(async (Data: any) => {
+          if (await Data.status) {
+            await this.toastr.success("Project Join Successfully");
+            await this.router.navigate(['/profilebyad']);
+            this.scrollToTop();
+          } else {
+            await this.toastr.warning("Please fill Form")
+          }
+        });
 
-      });
+      } else {
+        await this.toastr.warning("Please fill Form")
+      }
 
-
-    await this.toastr.success("Project Join Successfully");
-    await this.router.navigate(['/profile']);
-    this.scrollToTop();
+    });
   }
 
   getProjectById(projectId: string) {
@@ -166,7 +171,7 @@ console.log(Data)
       this.projectAdvisorData = resultData.data;
     });
   }
-  projectStudentData:any[]=[];
+  projectStudentData: any[] = [];
 
   getStudentById(projectId: string) {
     this.http.get(this.api + `/rmProject/student/:${projectId}`).subscribe((resultData: any) => {
@@ -239,12 +244,13 @@ console.log(Data)
   save() {
     if (true) {
       // เช็คว่าฟอร์มถูกต้องหรือไม่
-      // const isFormValid = this.year;
-
-      if (true) {
+      const isFormValid = this.iddescript_role;
+      console.log(isFormValid)
+      if (isFormValid) {
         this.register();
       } else {
-        alert('Please fill in all required fields.');
+        this.goToPreviousForm();
+        this.toastr.error('Please fill in all required fields description.');
 
       }
     }

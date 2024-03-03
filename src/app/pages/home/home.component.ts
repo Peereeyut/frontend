@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit {
   searchResultKeyword: string = '';
   noSearchResultsFound: boolean = false;
 
-  api = "https://serverbackend.cyclic.app"
+  api = "https://real-sweatsuit-toad.cyclic.app"
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     // this.route.queryParams.subscribe(params => {
     //   this.getAllProject();
@@ -161,7 +161,7 @@ export class HomeComponent implements OnInit {
           // console.log(res.data)
           var setarray = await [i, res.data]
           this.forgetstudent.push(await setarray)
-          await console.log(await this.forgetstudent)
+          // await console.log(await this.forgetstudent)
         })
       }
       this.totalPages = Math.ceil(this.StudentArray.length / this.pageSize);
@@ -244,7 +244,7 @@ export class HomeComponent implements OnInit {
     if (this.searchQuery.trim() !== '') {
       // นี่คือส่วนที่คุณต้องทำการค้นหาข้อมูลของคุณ (เช่นจาก API) และกำหนดค่าให้กับ this.searchResults
       // ตัวอย่าง: ค้นหาจากรายการ Students
-      console.log(this.searchQuery)
+      // console.log(this.searchQuery)
       this.searchResults = this.forgetstudent.filter(([project, students]) => {
         return project.en_title.toLowerCase().includes(this.searchQuery.toLowerCase());
       });

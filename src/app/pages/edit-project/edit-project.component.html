@@ -183,20 +183,22 @@
 
                     <div class="fields">
                         <div class="input-field">
-                            <label>ID Advisor</label>
+                            <label>Advisor Name</label>
                             <input type="text" [(ngModel)]="idadinvite" [ngModelOptions]="{standalone: true}"
-                                id="idadinvite" placeholder="Enter id advisor">
+                                id="idadinvite" placeholder="Enter Advisor Name">
                         </div>
                         <mat-card class="clickable invite">
-                            <a (click)="inviteAdvisor(idadinvite)">Invite</a>
+                            <!-- <a (click)="inviteAdvisor(idadinvite)">Invite</a> -->
+                            <a (click)="inviteAdvisorpopup(idadinvite)">Invite</a>
                         </mat-card>
                     </div>
                     <div>
                         <div class="submitted-words-container">
-                            <mat-card *ngFor="let submitted of submittedinviteAdvisor" class="submitted-word">
+                            <!--  -->
+                            <mat-card *ngFor="let submitted of arrayidinviteadvisor" class="submitted-word">
                                 <div class="centered-content m-1">
                                     <a class="flex-container small-icon">
-                                        <a>{{ submitted }} </a>
+                                        <a>{{ submitted.name }} </a>
                                         <b><a (click)="removeInviteAdvisor(submitted)"
                                                 [ngClass]="{ 'clickable': isClickable }"> ×
                                             </a></b>
@@ -204,11 +206,11 @@
                                 </div>
                             </mat-card>
                             <!-- Get invite -->
-                            <mat-card *ngFor="let submitted of invitedadvisor" class="submitted-word">
+                            <mat-card *ngFor="let submitted of submittedinviteAdvisor" class="submitted-word">
                                 <div class="centered-content m-1">
                                     <a class="flex-container small-icon">
-                                        <a>{{ submitted.advisor_idadvisor }} </a>
-                                        <b><a (click)="removeSubmittedInviteAdvisor(submitted.advisor_idadvisor,submitted.Project_idProject)"
+                                        <a>{{ submitted.name }} </a>
+                                        <b><a (click)="removeSubmittedInviteAdvisor(submitted)"
                                                 [ngClass]="{ 'clickable': isClickable }"> ×
                                             </a></b>
                                     </a>

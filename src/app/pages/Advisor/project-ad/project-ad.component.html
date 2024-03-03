@@ -7,7 +7,7 @@
 <mat-card class=" mx-auto max-w-7xl border-x container p-6" id="headcon">
   <div *ngFor="let Item of advisorData" class="">
     <b>
-      <p class="mt-10" style="font-size: 40px;">{{ Item.idadvisor }} {{ Item.ad_en_first_name }} {{ Item.ad_en_last_name
+      <p class="mt-10" style="font-size: 40px;">{{ Item.ad_en_first_name }} {{ Item.ad_en_last_name
         }}
       </p>
     </b><br>
@@ -30,11 +30,11 @@
     </div>
   </div><br>
   <mat-card-content>
-    <b><a >keyword: </a> <a [routerLink]="['/project-user/', idad]" class="blue-underlined "> All</a></b>
+    <b><a >keyword: </a> <a [routerLink]="['/projectbyad/', idad]" class="blue-underlined "> All({{countall}})</a></b>
     <div class="keywords-container">
       <ng-container *ngFor="let Item of keywordsData; let i = index">
         <span *ngIf="i % 7 === 0 && i !== 0"><br></span> <!-- Add line break every 3 keywords -->
-        <a [routerLink]="['/keyword', idad, Item.keyword]" class="blue-underlined tab">{{ Item.keyword }}({{ Item.count }})</a>
+        <a [routerLink]="['/keyword-ad', idad, Item.keyword]" class="blue-underlined tab">{{ Item.keyword }}({{ Item.count }})</a>
         <span *ngIf="i !== keywordsData.length - 1 && (i + 1) % 7 !== 0"> ,  </span> <!-- Add comma if not last keyword in line -->
       </ng-container>
     </div>

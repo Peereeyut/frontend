@@ -13,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AddprojectAdComponent implements OnInit {
 
-  api = "https://serverbackend.cyclic.app"
+  api = "https://real-sweatsuit-toad.cyclic.app"
 
   showForm1: boolean = true;
   showForm2: boolean = false;

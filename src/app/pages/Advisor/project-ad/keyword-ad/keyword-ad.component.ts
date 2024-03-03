@@ -17,7 +17,7 @@ export class KeywordAdComponent implements OnInit {
     });
   }
   userProfile: any;
-  api = "https://serverbackend.cyclic.app"
+  api = "https://real-sweatsuit-toad.cyclic.app"
   show1: boolean = true;
   show2: boolean = false;
 

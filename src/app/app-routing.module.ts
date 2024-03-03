@@ -5,7 +5,6 @@ import { HomeComponent } from './pages/home/home.component';
 import { AddProjectComponent } from './pages/add-project/add-project.component';
 import { EditProjectComponent } from './pages/edit-project/edit-project.component';
 import { ProjectRMComponent } from './pages/project-rm/project-rm.component';
-import { LoginComponent } from './pages/login/login.component';
 import { AboutComponent } from './pages/about/about.component';
 import { ProjectUserComponent } from './pages/project-user/project-user.component';
 import { MyprojectComponent } from './pages/myproject/myproject.component';
@@ -20,7 +19,7 @@ import { UpdateProfileComponent } from './pages/update-profile/update-profile.co
 import { InviteComponent } from './pages/invite/invite.component';
 import { NotfoundpathComponent } from './pages/notfoundpath/notfoundpath.component';
 import { AddprojectAdComponent } from './pages/Advisor/addproject-ad/addproject-ad.component';
-import { EditprojectAdComponent } from './pages/Advisor/editproject-ad/editproject-ad.component';
+// import { EditprojectAdComponent } from './pages/Advisor/editproject-ad/editproject-ad.component';
 import { InviteAdComponent } from './pages/Advisor/invite-ad/invite-ad.component';
 import { ProfileAdComponent } from './pages/Advisor/profile-ad/profile-ad.component';
 import { ProjectAdComponent } from './pages/Advisor/project-ad/project-ad.component';
@@ -82,10 +81,10 @@ const routes: Routes = [{
   path: 'addprojectbyad',
   component: AddprojectAdComponent,
 },
-{
-  path: 'editprojectbyad/:idadvisor/:idProject',
-  component: EditprojectAdComponent,
-},
+// {
+//   path: 'editprojectbyad/:idadvisor/:idProject',
+//   component: EditprojectAdComponent,
+// },
 {
   path: 'invitebyad/:idadvisor/:idProject',
   component: InviteAdComponent,

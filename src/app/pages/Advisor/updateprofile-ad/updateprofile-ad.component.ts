@@ -19,7 +19,7 @@ export class UpdateprofileAdComponent implements OnInit {
   userProfile: any;
   result: any;
   dataEmail: any;
-  api = "http://localhost:9002"
+  api = "https://real-sweatsuit-toad.cyclic.app"
   isClickable: boolean = true;
 
   showForm1: boolean = true;

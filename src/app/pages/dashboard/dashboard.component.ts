@@ -10,7 +10,7 @@ import { ChartComponent } from "ng-apexcharts";
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  api = "https://serverbackend.cyclic.app"
+  api = "https://real-sweatsuit-toad.cyclic.app"
   async ngOnInit(): Promise<void> {
     try {
       await this.onCategorySelected('All');

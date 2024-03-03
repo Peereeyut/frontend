@@ -14,7 +14,7 @@ export class TestComponent implements OnInit {
   constructor(private router: Router, private http: HttpClient, private el: ElementRef, private route: ActivatedRoute, private toastr: ToastrService,) {
 
   }
-  api = "https://serverbackend.cyclic.app"
+  api = "https://real-sweatsuit-toad.cyclic.app"
   showForm1: boolean = true;
   showForm2: boolean = false;
   isResultLoaded = false;

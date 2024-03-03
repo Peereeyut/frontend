@@ -53,7 +53,7 @@ export class ProjectUserComponent implements OnInit {
   emailData: any[] = [];
   projectData: any[] = [];
   projectstudentData: any[] = [];
-  api = "https://serverbackend.cyclic.app"
+  api = "https://real-sweatsuit-toad.cyclic.app"
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -112,11 +112,19 @@ export class ProjectUserComponent implements OnInit {
   }
   // ____________________________________ keyword(10) _______________________________
   keywordsData: any;
+  countall:any;
   getKeywords(studentId: string) {
-    this.http.get(`${this.api}/STprofile/keywords/:${studentId}`).subscribe((keywordData: any) => {
+    this.http.get(`${this.api}/STprofile/keywords/:${studentId}`).subscribe(async(keywordData: any) => {
       // this.isResultLoaded = true;
-      this.keywordsData = keywordData.data;
-      console.log(this.keywordsData)
+      this.keywordsData =await keywordData.data;
+      // console.log(this.keywordsData)
+      var count = 0;
+      for(let i of keywordData.data){
+        // console.log(i.count)
+        count += await i.count;
+      }
+      this.countall = await count;
+      // console.log(await count)
     });
   }
 

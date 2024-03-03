@@ -86,7 +86,7 @@ export class InviteComponent implements OnInit {
   projectAdvisorData: any;
   projectKeywordData: any;
 
-  api = "https://serverbackend.cyclic.app"
+  api = "https://real-sweatsuit-toad.cyclic.app"
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {

@@ -25,7 +25,7 @@ export class UpdatepopupComponent implements OnInit {
   }
   rolelist: any;
   editdata: any;
-
+  api = "https://real-sweatsuit-toad.cyclic.app";
 
   registerform = this.builder.group({
     id: this.builder.control(''),
@@ -50,9 +50,9 @@ export class UpdatepopupComponent implements OnInit {
     });
   }
 
-  UpdateUser() {
+  async UpdateUser() {
     if (this.registerform.value.role_idrole == "3") {
-      this.http.get("https://serverbackend.cyclic.app/backend/getstudent/:" + this.registerform.value.id).subscribe(async (resst: any) => {
+      this.http.get(this.api + "/backend/getstudent/:" + this.registerform.value.id).subscribe(async (resst: any) => {
         //ถ้าดึงข้อมูลจากstudentและpost success จะupdate role  
         if (resst.status) {
           var detailspostadvisor = await {
@@ -62,17 +62,60 @@ export class UpdatepopupComponent implements OnInit {
             "th_first_name": resst.data[0].th_first_name,
             "th_last_name": resst.data[0].th_last_name,
           }
-          this.http.post("https://serverbackend.cyclic.app/backend/updateteacher", detailspostadvisor).subscribe((respost: any) => {
-            console.log(respost)
+          console.log(detailspostadvisor)
+          this.http.post(this.api + "/backend/updateteacher", detailspostadvisor).subscribe(async (respost: any) => {
             if (respost.status) {
-              this.http.delete("https://serverbackend.cyclic.app/backend/deletestudent/:"+detailspostadvisor.idadvisor).subscribe(resdel=>{
+              //get phone
+              this.http.get(this.api + "/backend/getstudentphone/:" + this.registerform.value.id).subscribe(async (res: any) => {
+                console.log(res)
+                if (res.status) {
+                  for (let i of res.data) {
+                    var body = await {
+                      "phone": i.phone,
+                      "idadvisor": respost.id,
+                    }
+                    await this.http.post(this.api + "/backend/updateteacherphone", body).subscribe((respost: any) => {
 
+                    })
+                  }
+                }
               })
-              
-              this.service.updaterole(this.registerform.value.id, this.registerform.value.role_idrole).subscribe(async (res: any) => {
+              //get email
+              this.http.get(this.api + "/backend/getstudentemail/:" + this.registerform.value.id).subscribe(async (res: any) => {
+                console.log(res)
+                if (res.status) {
+                  for (let i of res.data) {
+                    var body = await {
+                      "email": i.email,
+                      "idadvisor": respost.id,
+                    }
+                    await this.http.post(this.api + "/backend/updateteacheremail", body).subscribe((respost: any) => {
+                      console.log(respost)
+                    })
+                  }
+                }
+              })
+              //del phone => del email => del student
+             await this.http.delete(this.api + "/backend/deletestudentdetail/:" + detailspostadvisor.idadvisor).subscribe(async (resdel: any) => {
+              console.log(resdel)
+                if(resdel.status){
+                  await this.http.delete(this.api + "/backend/deletestudent/:" + detailspostadvisor.idadvisor).subscribe(async (resdel: any) => {
+
+                  })
+                  //update role
+                  this.service.updaterole(this.registerform.value.id, this.registerform.value.role_idrole).subscribe(async (res: any) => {
+                  });
+                  this.dialogref.close();
+                  this.toastr.success("Update role complete");
+                }
+                else{
+                  this.dialogref.close();
+                  this.toastr.error("Update role Fail");
+                }
               });
-              this.dialogref.close();
-              this.toastr.success("Update role complete");
+
+
+
             }
             else {
               this.dialogref.close();

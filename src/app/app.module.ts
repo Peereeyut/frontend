@@ -37,7 +37,6 @@ import { EditProjectComponent } from './pages/edit-project/edit-project.componen
 import { MyprojectComponent } from './pages/myproject/myproject.component';
 import { TruncatePipe } from './truncate.pipe';
 import { ProjectRMComponent } from './pages/project-rm/project-rm.component';
-import { LoginComponent } from './pages/login/login.component';
 import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { AboutComponent } from './pages/about/about.component';
@@ -57,13 +56,15 @@ import { NotfoundpathComponent } from './pages/notfoundpath/notfoundpath.compone
 import { ProfileAdComponent } from './pages/Advisor/profile-ad/profile-ad.component';
 import { ProjectAdComponent } from './pages/Advisor/project-ad/project-ad.component';
 import { AddprojectAdComponent } from './pages/Advisor/addproject-ad/addproject-ad.component';
-import { EditprojectAdComponent } from './pages/Advisor/editproject-ad/editproject-ad.component';
+// import { EditprojectAdComponent } from './pages/Advisor/editproject-ad/editproject-ad.component';
 import { UpdateprofileAdComponent } from './pages/Advisor/updateprofile-ad/updateprofile-ad.component';
 import { InviteAdComponent } from './pages/Advisor/invite-ad/invite-ad.component';
 import { KeywordComponent } from './pages/project-user/keyword/keyword.component';
 import { KeywordAdComponent } from './pages/Advisor/project-ad/keyword-ad/keyword-ad.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { InviteadvisorEditComponent } from './pages/edit-project/inviteadvisor-edit/inviteadvisor-edit.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -76,7 +77,6 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
     MyprojectComponent,
     TruncatePipe,
     ProjectRMComponent,
-    LoginComponent,
     AboutComponent,
     ProjectUserComponent,
     DashboardComponent,
@@ -92,11 +92,13 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
     ProfileAdComponent,
     ProjectAdComponent,
     AddprojectAdComponent,
-    EditprojectAdComponent,
+    // EditprojectAdComponent,
     UpdateprofileAdComponent,
     InviteAdComponent,
     KeywordComponent,
     KeywordAdComponent,
+    InviteadvisorEditComponent,
+ 
     
   ],
   imports: [

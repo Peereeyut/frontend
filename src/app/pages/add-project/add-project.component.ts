@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -6,7 +6,9 @@ import { ElementRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { InvitePopupComponent } from './invite-popup/invite-popup.component';
 import { ToastrService } from 'ngx-toastr';
-
+@Injectable({
+  providedIn: 'root'
+})
 @Component({
   selector: 'app-add-project',
   templateUrl: './add-project.component.html',
@@ -15,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 
 export class AddProjectComponent implements OnInit {
 
-  api = "https://serverbackend.cyclic.app"
+  api = "https://real-sweatsuit-toad.cyclic.app"
 
   showForm1: boolean = true;
   showForm2: boolean = false;
@@ -158,10 +160,9 @@ export class AddProjectComponent implements OnInit {
         })
       }
       for (let k of this.arrayidinviteadvisor) {
-        console.log(k)
         let inviteadvisor = await {
           "Project_idProject": this.projectIdreturn,
-          "advisor_idadvisor": k,
+          "advisor_idadvisor": k.idadvisor,
         };
         console.log(inviteadvisor)
         await this.http.post(this.api + "/adProject/inviteadvisor/add", inviteadvisor).subscribe((Data: any) => {
@@ -196,7 +197,7 @@ export class AddProjectComponent implements OnInit {
       })
       ////////////////////////////////////////////////////////////
     });
-    await alert("Project creatted Successfully");
+    await this.toastr.success("Project creatted Successfully");
     await this.router.navigate(['/home']);
     this.scrollToTop();
   }
@@ -209,7 +210,7 @@ export class AddProjectComponent implements OnInit {
       if (isFormValid) {
         this.register();
       } else {
-        alert('Please fill in all required fields.');
+        this.toastr.warning('Please fill in all required fields.');
         const firstInvalidControl = this.getFirstInvalidControl();
         if (firstInvalidControl) {
           firstInvalidControl.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -253,19 +254,28 @@ export class AddProjectComponent implements OnInit {
     const element = document.body;
     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-
-  OpenDialog(enteranimation: any, exitanimation: any, data: any) {
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  async OpenDialog(enteranimation: any, exitanimation: any, data: any) {
     const popup = this.dialog.open(InvitePopupComponent, {
       enterAnimationDuration: enteranimation,
       exitAnimationDuration: exitanimation,
-      width: '25%',
+      width: '50%',
       data: {
-        idstudent: data
+        name: data,
+        listadvisor: this.arrayidinviteadvisor,
       }
     });
-    // popup.afterClosed().subscribe(res => {
-    //   this.Loadstudent();
-    // });
+
+    popup.afterClosed().subscribe(async (res: any) => {
+      this.object = await { 
+        "idadvisor": res.idadvisor,
+        "name":res.ad_en_first_name,
+        "lastname":res.ad_en_last_name
+       }
+      await this.arrayidinviteadvisor.push(await this.object);
+      this.idadinvite = '';
+      console.log(this.arrayidinviteadvisor)
+    });
   }
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   arrayidinvitestudent: any[] = [];
@@ -312,36 +322,18 @@ export class AddProjectComponent implements OnInit {
   submittedinviteAdvisor: any[] = [];
   arrayidinviteadvisor: any[] = [];
   result: any;
-  async inviteAdvisor(id: string) {
-    if (id.trim() !== '') {
-      this.http.get(this.api + "/STprofile/advisor/:" + id).subscribe(async (advisorData: any) => {
-        if (advisorData.data.length > 0) {
-          this.result = await Object.entries(advisorData.data)[0][1];
-          var inviteconfirm = await confirm('invite \n' + this.result.idadvisor + '   ' + this.result.ad_en_first_name + '   ' + this.result.ad_en_last_name)
-          if (inviteconfirm) {
-            await this.submittedinviteAdvisor.push(this.result.idadvisor);
-            this.object = { "idadvisor": this.result.idadvisor }
-            this.arrayidinviteadvisor.push(this.result.idadvisor);
-            this.idadinvite = '';
-            // console.log(this.submittedinviteadvisor)
-          }
-          else {
-            this.idadinvite = '';
-          }
-        }
-        else {
-          this.toastr.error("Account not found " + id)
-        }
-      });
-    }
-    else {
-      this.toastr.warning("Not correct,Please fill Form")
+  async inviteAdvisor(id: any) {
+    if (id != null) {
+      this.object = await { "idadvisor": String(id) }
+      await this.arrayidinviteadvisor.push(this.object);
+      this.idadinvite = '';
+      console.log(this.arrayidinviteadvisor)
     }
   }
 
   removeSubmittedInviteAdvisor(id: any) {
     console.log(id)
-    this.submittedinviteAdvisor = this.submittedinviteAdvisor.filter(submitted => submitted !== id);
+    this.arrayidinviteadvisor = this.arrayidinviteadvisor.filter(submitted => submitted.idadvisor !== id);
 
     // this.http.delete("/addProject/keyword/delete/:" + id).subscribe((Data: any) => {
     //   console.log(Data);
@@ -356,7 +348,7 @@ export class AddProjectComponent implements OnInit {
 
     if (this.keyword.trim() !== '') {
       let keywordData = {
-        "keyword": this.keyword,
+        "keyword": this.keyword.toLowerCase(),
       };
 
       this.http.post(this.api + "/adProject/keyword/add", keywordData).subscribe(async (Data: any) => {
@@ -382,4 +374,14 @@ export class AddProjectComponent implements OnInit {
       console.log(Data);
     });
   }
+
+  inviteAdvisorpopup(data: any) {
+    if (data.trim() !== '') {
+      this.OpenDialog('1000ms', '600ms', data);
+    }
+    else {
+      this.toastr.warning("Not correct,Please fill Form")
+    }
+  }
+
 }

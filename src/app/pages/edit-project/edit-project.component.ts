@@ -4,6 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ElementRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material/dialog';
+import { InviteadvisorEditComponent } from './inviteadvisor-edit/inviteadvisor-edit.component';
 
 @Component({
   selector: 'app-edit-project',
@@ -11,10 +13,10 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./edit-project.component.css'],
 })
 export class EditProjectComponent implements OnInit {
-  constructor(private router: Router, private http: HttpClient, private el: ElementRef, private route: ActivatedRoute, private toastr: ToastrService,) {
+  constructor(private router: Router, private http: HttpClient, private el: ElementRef, private route: ActivatedRoute, private toastr: ToastrService, private dialog: MatDialog,) {
 
   }
-  api = "https://serverbackend.cyclic.app"
+  api = "https://real-sweatsuit-toad.cyclic.app"
   showForm1: boolean = true;
   showForm2: boolean = false;
   isResultLoaded = false;
@@ -125,9 +127,10 @@ export class EditProjectComponent implements OnInit {
       })
     }
     for (let k of this.arrayidinviteadvisor) {
+      console.log(k);
       let inviteadvisor = await {
         "Project_idProject": this.projectData[0].idProject,
-        "advisor_idadvisor": k,
+        "advisor_idadvisor": k.idadvisor,
       };
       console.log(inviteadvisor)
       await this.http.post(this.api + "/adProject/inviteadvisor/add", inviteadvisor).subscribe((Data: any) => {
@@ -252,44 +255,20 @@ export class EditProjectComponent implements OnInit {
   submittedinviteAdvisor: any[] = [];
   arrayidinviteadvisor: any[] = [];
   result: any;
-  async inviteAdvisor(id: string) {
-    if (id.trim() !== '') {
-      this.http.get(this.api + "/STprofile/advisor/:" + id).subscribe(async (advisorData: any) => {
-        if (advisorData.data.length > 0) {
-          this.result = await Object.entries(advisorData.data)[0][1];
-          var inviteconfirm = await confirm('invite \n' + this.result.idadvisor + '   ' + this.result.ad_en_first_name + '   ' + this.result.ad_en_last_name)
-          if (inviteconfirm) {
-            await this.submittedinviteAdvisor.push(this.result.idadvisor);
-            console.log(this.submittedinviteAdvisor)
-            this.object = { "idadvisor": this.result.idadvisor }
-            this.arrayidinviteadvisor.push(this.result.idadvisor);
-            this.idadinvite = '';
-            console.log(this.submittedinviteAdvisor[0])
-          }
-          else {
-            this.idadinvite = '';
-          }
-        }
-        else {
-          this.toastr.error("Account not found " + id)
-        }
-      });
-    }
-    else {
-      this.toastr.warning("Not correct,Please fill Form")
-    }
-  }
+
 
   removeInviteAdvisor(id: any,) {
     console.log(id)
-    this.submittedinviteAdvisor = this.submittedinviteAdvisor.filter(submitted => submitted !== id);
+    this.arrayidinviteadvisor = this.arrayidinviteadvisor.filter(submitted => submitted.idadvisor !== id.idadvisor);
   }
-  removeSubmittedInviteAdvisor(id: any, idproject: any) {
-    console.log(id)
-    this.submittedinviteAdvisor = this.submittedinviteAdvisor.filter(submitted => submitted.advisor_idadvisor !== id);
-    this.invitedadvisor = this.invitedadvisor.filter(submitted => submitted.advisor_idadvisor !== id);
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    this.http.delete(this.api + "/edProject/deleteinviteAd/:" + id + "/:" + idproject).subscribe((Data: any) => {
+  removeSubmittedInviteAdvisor(result: any) {
+    console.log(result)
+    
+    this.submittedinviteAdvisor = this.submittedinviteAdvisor.filter(submitted => submitted.idadvisor !== result.idadvisor);
+
+    this.http.delete(this.api + "/edProject/deleteinviteAd/:" + result.idadvisor + "/:" + this.projectId).subscribe((Data: any) => {
       console.log(Data);
     });
   }
@@ -420,16 +399,51 @@ export class EditProjectComponent implements OnInit {
   async getadvisorinvited(idProject: any) {
     try {
       const res: any = await this.http.get(this.api + "/edProject/invitedadvisor/:" + idProject).toPromise();
-      console.log(res)
+      console.log(res.data)
       if (res.status) {
+
         for (let i of res.data) {
-          console.log(i)
-          await this.invitedadvisor.push(i);
+          // console.log(i)
+          this.object = await {
+            "idadvisor": i.advisor_idadvisor,
+            "name": i.ad_en_first_name,
+            "lastname": i.ad_en_last_name
+          }
+          await this.submittedinviteAdvisor.push(this.object);
         }
       }
     } catch (error) {
       console.error("Error fetching project team:", error);
     }
   }
+  inviteAdvisorpopup(data: any) {
+    if (data.trim() !== '') {
+      this.OpenDialog('1000ms', '600ms', data);
+    }
+    else {
+      this.toastr.warning("Not correct,Please fill Form")
+    }
+  }
+  async OpenDialog(enteranimation: any, exitanimation: any, data: any) {
+    const popup = this.dialog.open(InviteadvisorEditComponent, {
+      enterAnimationDuration: enteranimation,
+      exitAnimationDuration: exitanimation,
+      width: '50%',
+      data: {
+        name: data,
+        listadvisor: this.arrayidinviteadvisor,
+      }
+    });
 
+    popup.afterClosed().subscribe(async (res: any) => {
+      this.object = await {
+        "idadvisor": res.idadvisor,
+        "name": res.ad_en_first_name,
+        "lastname": res.ad_en_last_name
+      }
+      await this.arrayidinviteadvisor.push(await this.object);
+      this.idadinvite = '';
+      console.log(this.arrayidinviteadvisor)
+    });
+  }
 }

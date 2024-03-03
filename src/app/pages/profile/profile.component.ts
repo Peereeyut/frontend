@@ -53,7 +53,7 @@ export class ProfileComponent implements OnInit {
   studentData: any[] = [];
   projectData: any[] = [];
   studentmember: any = [];
-  api = "https://serverbackend.cyclic.app"
+  api = "https://real-sweatsuit-toad.cyclic.app"
   async ngOnInit() {
     this.userProfile = await JSON.parse(sessionStorage.getItem("loggedInUser") || "");
     await this.getIdByEmail(this.userProfile.email);

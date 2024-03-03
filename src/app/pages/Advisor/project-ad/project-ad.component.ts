@@ -17,7 +17,7 @@ export class ProjectAdComponent implements OnInit {
     });
   }
   userProfile: any;
-  api = "https://serverbackend.cyclic.app"
+  api = "https://real-sweatsuit-toad.cyclic.app"
   show1: boolean = true;
   show2: boolean = false;
 
@@ -110,11 +110,18 @@ export class ProjectAdComponent implements OnInit {
   }
   // ____________________________________ keyword(10) _______________________________
   keywordsData: any;
+  countall:any;
   getKeywords(advisorId: string) {
-    this.http.get(this.api + `/projectAdv/keywords/:${advisorId}`).subscribe((keywordData: any) => {
+    this.http.get(this.api + `/projectAdv/keywords/:${advisorId}`).subscribe(async(keywordData: any) => {
       // this.isResultLoaded = true;
       this.keywordsData = keywordData.data;
-      console.log(this.keywordsData)
+      var count = 0;
+      for(let i of keywordData.data){
+        // console.log(i.count)
+        count += await i.count;
+      }
+      this.countall = await count;
+      // console.log(await count)
     });
   }
   getAdvisorById(projectId: string) {
